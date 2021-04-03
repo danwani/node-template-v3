@@ -45,8 +45,11 @@ sp-std = { default-features = false, version = '3.0.0' }
 sp-transaction-pool = { default-features = false, version = '3.0.0' }
 sp-version = { default-features = false, version = '3.0.0' }
 
+orml-nft = { version = "0.4.0", default-features = false }
+
 # local dependencies
 pallet-template = { default-features = false, path = '../pallets/template', version = '3.0.0' }
+pallet-kitties = { path = '../pallets/kitties', default-features = false }
 
 [features]
 default = ['std']
@@ -60,6 +63,7 @@ runtime-benchmarks = [
     'pallet-template/runtime-benchmarks',
     'pallet-timestamp/runtime-benchmarks',
     'sp-runtime/runtime-benchmarks',
+    'pallet-kitties/runtime-benchmarks',
 ]
 std = [
     'codec/std',
@@ -88,4 +92,6 @@ std = [
     'sp-std/std',
     'sp-transaction-pool/std',
     'sp-version/std',
+    'pallet-kitties/std',
+    "orml-nft/std",
 ]

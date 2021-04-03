@@ -39,6 +39,8 @@ pub use frame_support::{
 };
 use pallet_transaction_payment::CurrencyAdapter;
 
+mod weights;
+
 /// Import the template pallet.
 pub use pallet_template;
 
@@ -270,6 +272,34 @@ impl pallet_template::Config for Runtime {
 	type Event = Event;
 }
 
+
+impl orml_nft::Config for Runtime {
+	type ClassId = u32;
+	type TokenId = u32;
+	type ClassData = ();
+	type TokenData = pallet_kitties::Kitty;
+}
+
+parameter_types! {
+	pub const DefaultDifficulty: u32 = 100;
+}
+
+impl pallet_kitties::Trait for Runtime {
+	type Event = Event;
+	type Randomness = RandomnessCollectiveFlip;
+	type Currency = Balances;
+	type WeightInfo = weights::pallet_kitties::WeightInfo;
+	type DefaultDifficulty = DefaultDifficulty;
+}
+
+impl<C> frame_system::offchain::SendTransactionTypes<C> for Runtime
+where
+	Call: From<C>,
+{
+	type OverarchingCall = Call;
+	type Extrinsic = UncheckedExtrinsic;
+}
+
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
 	pub enum Runtime where
@@ -287,6 +317,9 @@ construct_runtime!(
 		Sudo: pallet_sudo::{Module, Call, Config<T>, Storage, Event<T>},
 		// Include the custom logic from the pallet-template in the runtime.
 		TemplateModule: pallet_template::{Module, Call, Storage, Event<T>},
+		// Substrate Kitties module
+		Kitties: pallet_kitties::{Module, Storage, Call, Event<T>, Config, ValidateUnsigned},
+		NFT: orml_nft::{Module, Storage},
 	}
 );
 
