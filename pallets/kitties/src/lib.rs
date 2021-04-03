@@ -2,7 +2,7 @@
 
 use codec::{Encode, Decode};
 use frame_support::{
-	decl_module, decl_storage, decl_event, decl_error, ensure, StorageValue, StorageDoubleMap,
+	decl_module, decl_storage, decl_event, decl_error, ensure, StorageValue,
 	traits::{Randomness, Currency, ExistenceRequirement, Get}, RuntimeDebug, dispatch::DispatchResult,
 	weights::Weight,
 };
@@ -19,6 +19,9 @@ use sp_runtime::{
 use orml_utilities::with_transaction_result;
 use orml_nft::Module as NftModule;
 
+#[cfg(feature = "std")]
+use serde::{Serialize, Deserialize};
+
 #[cfg(test)]
 mod tests;
 #[cfg(feature = "runtime-benchmarks")]
@@ -26,6 +29,7 @@ mod benchmarking;
 mod default_weights;
 
 #[derive(Encode, Decode, Clone, RuntimeDebug, PartialEq, Eq)]
+#[cfg_attr(feature = "std", derive(Serialize, Deserialize))]
 pub struct Kitty(pub [u8; 16]);
 
 #[derive(Encode, Decode, Clone, Copy, RuntimeDebug, PartialEq, Eq)]
