@@ -42,7 +42,7 @@ parameter_types! {
     pub const AvailableBlockRatio: Perbill = Perbill::one();
 }
 
-impl frame_system::Trait for Test {
+impl frame_system::Config for Test {
 	type BaseCallFilter = ();
 	type Origin = Origin;
 	type Call = Call;
@@ -73,7 +73,7 @@ impl frame_system::Trait for Test {
 parameter_types! {
 	pub const ExistentialDeposit: u64 = 1;
 }
-impl pallet_balances::Trait for Test {
+impl pallet_balances::Config for Test {
 	type MaxLocks = ();
 	type Balance = u64;
 	type Event = Event;
@@ -83,7 +83,7 @@ impl pallet_balances::Trait for Test {
 	type WeightInfo = ();
 }
 
-impl orml_nft::Trait for Test {
+impl orml_nft::Config for Test {
     type ClassId = u32;
 	type TokenId = u32;
 	type ClassData = ();

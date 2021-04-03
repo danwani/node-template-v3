@@ -284,7 +284,7 @@ parameter_types! {
 	pub const DefaultDifficulty: u32 = 100;
 }
 
-impl pallet_kitties::Trait for Runtime {
+impl pallet_kitties::Config for Runtime {
 	type Event = Event;
 	type Randomness = RandomnessCollectiveFlip;
 	type Currency = Balances;

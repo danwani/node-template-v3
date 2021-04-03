@@ -56,7 +56,7 @@ pub trait WeightInfo {
 	fn buy() -> Weight;
 }
 
-pub trait Trait: orml_nft::Config<TokenData = Kitty, ClassData = ()> + SendTransactionTypes<Call<Self>> {
+pub trait Config: orml_nft::Config<TokenData = Kitty, ClassData = ()> + SendTransactionTypes<Call<Self>> {
 	type Event: From<Event<Self>> + Into<<Self as frame_system::Config>::Event>;
 	type Randomness: Randomness<Self::Hash>;
 	type Currency: Currency<Self::AccountId>;
@@ -65,10 +65,10 @@ pub trait Trait: orml_nft::Config<TokenData = Kitty, ClassData = ()> + SendTrans
 }
 
 type KittyIndexOf<T> = <T as orml_nft::Config>::TokenId;
-type BalanceOf<T> = <<T as Trait>::Currency as Currency<<T as frame_system::Config>::AccountId>>::Balance;
+type BalanceOf<T> = <<T as Config>::Currency as Currency<<T as frame_system::Config>::AccountId>>::Balance;
 
 decl_storage! {
-	trait Store for Module<T: Trait> as Kitties {
+	trait Store for Module<T: Config> as Kitties {
 		/// Get kitty price. None means not for sale.
 		pub KittyPrices get(fn kitty_prices): map hasher(blake2_128_concat) KittyIndexOf<T> => Option<BalanceOf<T>>;
 		/// Get kitty price. None means not for sale.
@@ -107,7 +107,7 @@ decl_event! {
 }
 
 decl_error! {
-	pub enum Error for Module<T: Trait> {
+	pub enum Error for Module<T: Config> {
 		InvalidKittyId,
 		SameGender,
 		NotOwner,
@@ -118,7 +118,7 @@ decl_error! {
 }
 
 decl_module! {
-	pub struct Module<T: Trait> for enum Call where origin: T::Origin {
+	pub struct Module<T: Config> for enum Call where origin: T::Origin {
 		type Error = Error<T>;
 
 		/// Default difficulty for auto breed
@@ -225,7 +225,7 @@ fn combine_dna(dna1: u8, dna2: u8, selector: u8) -> u8 {
 	(!selector & dna1) | (selector & dna2)
 }
 
-impl<T: Trait> Module<T> {
+impl<T: Config> Module<T> {
 	fn kitties(owner: &T::AccountId, kitty_id: KittyIndexOf<T>) -> Option<Kitty> {
 		NftModule::<T>::tokens(Self::class_id(), kitty_id).and_then(|x| {
 			if x.owner == *owner {
@@ -329,7 +329,7 @@ impl<T: Trait> Module<T> {
 	}
 }
 
-impl<T: Trait> frame_support::unsigned::ValidateUnsigned for Module<T> {
+impl<T: Config> frame_support::unsigned::ValidateUnsigned for Module<T> {
 	type Call = Call<T>;
 
 	fn validate_unsigned(_source: TransactionSource, call: &Self::Call) -> TransactionValidity {
